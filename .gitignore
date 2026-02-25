@@ -1,0 +1,15 @@
+*.pyc
+__pycache__/
+db.sqlite3
+
+venv/
+env/
+
+.env
+
+*.key
+blogproject/keys/
+
+media/
+
+.idea
