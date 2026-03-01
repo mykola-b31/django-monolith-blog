@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+from datetime import timedelta
 
 from decouple import config
 from pathlib import Path
@@ -40,10 +41,33 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'webapp',
-
+    'rest_framework',
+    'drf_spectacular',
+    'silk',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    "ALGORITHM": "RS256",
+    "SIGNING_KEY": open(Path(BASE_DIR / "blogproject/keys/jwtRS256.key")).read(),
+    "VERIFYING_KEY": open(Path(BASE_DIR / "blogproject/keys/jwtRS256.key.pub")).read(),
+    "TOKEN_OBTAIN_SERIALIZER": "webapp.serializers.MyTokenObtainPairSerializer"
+}
+
+SILKY_PYTHON_PROFILER = True
+
 MIDDLEWARE = [
+    'silk.middleware.SilkyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +93,16 @@ TEMPLATES = [
         },
     },
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": config('CACHE_URL'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        }
+    }
+}
 
 WSGI_APPLICATION = 'blogproject.wsgi.application'
 

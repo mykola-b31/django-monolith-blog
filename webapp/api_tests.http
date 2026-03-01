@@ -1,0 +1,98 @@
+### Авторизація та отримання токена
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+> {%
+    client.global.set("auth_token", response.body.access);
+ %}
+
+### Отримання списку дописів
+GET http://127.0.0.1:8000/api/posts/
+Authorization: Bearer {{auth_token}}
+
+### Створення допису
+POST http://127.0.0.1:8000/api/posts/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "title":"Новий допис",
+  "text": "Це точно новий допис"
+}
+
+### Отримання допису
+GET http://127.0.0.1:8000/api/posts/5/
+Authorization: Bearer {{auth_token}}
+
+### Часткова модифікація допису
+PATCH http://127.0.0.1:8000/api/posts/4/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "text": "Це оновлений текст нового допису"
+}
+
+### Повна модифікація допису
+PUT http://127.0.0.1:8000/api/posts/5/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "title": "Нова тема допису",
+  "text": "Це ще раз оновлений текст"
+}
+
+### Видалення допису
+DELETE http://127.0.0.1:8000/api/posts/5/
+Authorization: Bearer {{auth_token}}
+
+### Отримання всіх коментарів
+GET http://127.0.0.1:8000/api/comments/
+Authorization: Bearer {{auth_token}}
+
+### Створення коментаря
+POST http://127.0.0.1:8000/api/comments/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "post": 6,
+  "text": "Просто коментар"
+}
+
+### Редагування коментаря
+PATCH http://127.0.0.1:8000/api/comments/1/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "text": ""
+}
+
+### Видалення коментаря
+DELETE http://127.0.0.1:8000/api/comments/1/
+Authorization: Bearer {{auth_token}}
+
+### Отримання списку авторів
+GET http://127.0.0.1:8000/api/authors/
+Authorization: Bearer {{auth_token}}
+
+### Отримання даних конкретного автора
+GET http://127.0.0.1:8000/api/authors/1/
+Authorization: Bearer {{auth_token}}
+
+### Створення нового користувача
+POST http://127.0.0.1:8000/api/authors/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user"
+}
