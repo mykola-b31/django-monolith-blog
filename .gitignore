@@ -1,15 +1,30 @@
+# Python & Кеш
 *.pyc
 __pycache__/
-db.sqlite3
 
+# Віртуальні середовища
 venv/
 env/
+.venv/
 
+# Налаштування та секрети
 .env
-
 *.key
-blogproject/keys/
+blogproject/blogproject/keys/
 
+# Медіа та статика
 media/
+staticfiles/
+static_root/
 
-.idea
+# Локальна база даних Django
+db.sqlite3
+*.sqlite3
+
+# Налаштування IDE (PyCharm/VSCode)
+.idea/
+.vscode/
+
+# Системні файли macOS та Windows
+.DS_Store
+Thumbs.db

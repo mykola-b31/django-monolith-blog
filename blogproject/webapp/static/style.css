@@ -1,0 +1,11 @@
+.box {
+  inline-size: 200pt;
+  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text-break {
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}

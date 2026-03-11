@@ -1,0 +1,40 @@
+### Отримання списку дописів
+GET http://127.0.0.1:8000/api/posts/
+Authorization: Bearer {{auth_token}}
+
+### Створення допису
+POST http://127.0.0.1:8000/api/posts/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "title":"Just Text",
+  "text": "This is plain text"
+}
+
+### Отримання допису
+GET http://127.0.0.1:8000/api/posts/22/
+Authorization: Bearer {{auth_token}}
+
+### Часткова модифікація допису
+PATCH http://127.0.0.1:8000/api/posts/22/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "text": "Це оновлений текст нового допису"
+}
+
+### Повна модифікація допису
+PUT http://127.0.0.1:8000/api/posts/22/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "title": "Нова тема допису",
+  "text": "Це ще раз оновлений текст"
+}
+
+### Видалення допису
+DELETE http://127.0.0.1:8000/api/posts/6/
+Authorization: Bearer {{auth_token}}

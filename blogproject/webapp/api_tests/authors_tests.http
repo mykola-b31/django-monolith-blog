@@ -1,0 +1,31 @@
+### Отримання списку авторів
+GET http://127.0.0.1:8000/api/authors/
+Authorization: Bearer {{auth_token}}
+
+### Отримання даних конкретного автора
+GET http://127.0.0.1:8000/api/authors/1/
+Authorization: Bearer {{auth_token}}
+
+### Створення нового користувача
+POST http://127.0.0.1:8000/api/authors/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user",
+  "email": "user@gmail.com"
+}
+
+### Підписка на сповіщення
+POST http://127.0.0.1:8000/api/authors/1/subscribe/
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+    "email": "user@gmail.com"
+}
+
+### Відписка від сповіщень
+DELETE http://127.0.0.1:8000/api/authors/1/subscribe/
+Authorization: Bearer {{auth_token}}

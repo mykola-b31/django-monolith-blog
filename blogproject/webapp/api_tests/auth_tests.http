@@ -1,0 +1,12 @@
+### Авторизація та отримання токена
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user"
+}
+
+> {%
+    client.global.set("auth_token", response.body.access);
+ %}
