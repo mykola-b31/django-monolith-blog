@@ -43,6 +43,7 @@ def process_notification(ch, method, properties, body):
                 },
                 upsert=True
             )
+            logger.info(f"[+] User {user_email} (ID: {user_id}) subscribed to author ID {author_id}")
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
         elif event == "UnsubscribeNotifications":
@@ -50,6 +51,7 @@ def process_notification(ch, method, properties, body):
             author_id = message["body"]["author_id"]
 
             col.update_one({ "id": user_id },{"$pull": { "subscribed_to": author_id }})
+            logger.info(f"[-] User ID {user_id} unsubscribed from author ID {author_id}")
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
         elif event == "RecommendationReady":
@@ -57,6 +59,8 @@ def process_notification(ch, method, properties, body):
             author_id = message["body"]["post"]["author"]["id"]
             author_name = message["body"]["post"]["author"]["username"]
             author_email = message["body"]["post"]["author"]["email"]
+
+            logger.info(f"[*] Received RecommendationReady for post '{blog_post_uri}' by '{author_name}'")
 
             subs = col.find({
                 "email": { "$ne": author_email },
@@ -68,12 +72,20 @@ def process_notification(ch, method, properties, body):
 
             sender = "Blog <blog@blog.net>"
 
+            subs_list = list(subs)
+
+            if not subs_list:
+                logger.info(f"    No subscribers found for author '{author_name}'. Skipping email sending.")
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+                return
+
             with smtplib.SMTP("sandbox.smtp.mailtrap.io", 2525) as server:
                 server.starttls()
                 server.login(mailtrap_user, mailtrap_pass)
 
                 for receiver_doc in subs:
                     receiver_email = receiver_doc['email']
+                    logger.info(f"    -> Sending email to subscriber: {receiver_email}")
 
                     notification_message = f"""\
 Subject: New Post
@@ -83,6 +95,7 @@ From: {sender}
 Hi! There is a new post by {author_name} at {blog_post_uri} that is worth reading."""
 
                     server.sendmail(sender, receiver_email, notification_message)
+                logger.info(f"[v] Successfully sent {len(subs_list)} emails.")
                 ch.basic_ack(delivery_tag=method.delivery_tag)
 
     except Exception as e:
