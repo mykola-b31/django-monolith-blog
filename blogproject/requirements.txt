@@ -1,0 +1,12 @@
+Django
+python-decouple
+psycopg2
+Pillow
+djangorestframework
+drf-spectacular
+django-silk
+redis[hiredis]
+django-redis
+djangorestframework-simplejwt[crypto]
+pika
+python-dotenv
