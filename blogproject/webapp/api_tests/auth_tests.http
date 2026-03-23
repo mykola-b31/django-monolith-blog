@@ -13,3 +13,10 @@ Content-Type: application/json
 
 ###
 GET http://127.0.0.1:8000/api/jwks/
+
+### Запит до рекомендацій БЕЗ токена (має бути помилка 403)
+GET http://127.0.0.1:8001/
+
+### Запит до рекомендацій З валідним токеном
+GET http://127.0.0.1:8001/
+Authorization: Bearer {{auth_token}}

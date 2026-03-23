@@ -34,7 +34,7 @@ async def lifespan(app: FastAPI):
 
     channel = await connection.channel()
     await channel.basic_qos(prefetch_count=1)
-    await channel.basic_consume(os.environ['RECOMMENDATION_QUEUE'], moderate_blog_post())
+    await channel.basic_consume(os.environ['RECOMMENDATION_QUEUE'], moderate_blog_post)
 
     yield
 

@@ -15,11 +15,12 @@ recommendation_db = mongo_client[os.environ['RECOMMENDATION_DB']]
 def get_recommendations(author_id):
     col = recommendation_db['recommendations']
     result = col.find({
-        "author": {"$ne": author_id},
+        "author": {"$ne": int(author_id)},
     }, projection={'_id': False})
 
-    return result
+    return [res for res in result]
 
 def create_recommendation(recommendation):
     col = recommendation_db['recommendations']
-    return col.insert_one(recommendation).inserted_id
+    result = col.insert_one(recommendation)
+    return str(result.inserted_id)

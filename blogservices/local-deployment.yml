@@ -12,7 +12,7 @@ services:
   mongo_eventlog:
     image: mongo:6
     container_name: mongo_eventlog
-    port:
+    ports:
       - '27071:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_LOG_USER}

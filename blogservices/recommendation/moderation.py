@@ -1,6 +1,5 @@
 import logging
 import json
-from statistics import correlation
 
 import requests
 import os
@@ -12,8 +11,6 @@ from collections import Counter
 
 from db import create_recommendation
 import aiormq
-
-from recommendation.main import analyzer
 
 download('vader_lexicon')
 download('punkt')
@@ -76,7 +73,7 @@ async def moderate_blog_post(message: aiormq.abc.DeliveredMessage):
 
                 await message.channel.basic_publish(
                     exchange=os.environ['EVENT_EXCHANGE'],
-                    routing_key=['ROUTING_KEY_NOTIFICATION'],
+                    routing_key=os.environ['ROUTING_KEY_NOTIFICATION'],
                     body=json.dumps({
                         'correlationId': correlation_id,
                         'body': {
