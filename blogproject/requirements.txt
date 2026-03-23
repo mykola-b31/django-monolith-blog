@@ -10,3 +10,4 @@ django-redis
 djangorestframework-simplejwt[crypto]
 pika
 python-dotenv
+python-jose[cryptography]

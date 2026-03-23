@@ -22,5 +22,6 @@ urlpatterns = [
     path("api/token/blacklist/", TokenBlacklistView.as_view(), name="token_blacklist"),
     path('api/schema/', SpectacularAPIView.as_view(), name="schema"),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/authors/<int:pk>/subscribe/', NotificationView.as_view(), name='author-subscribe')
+    path('api/authors/<int:pk>/subscribe/', NotificationView.as_view(), name='author-subscribe'),
+    path("api/jwks/", api_views.JWKSView.as_view(), name="jwks")
 ]

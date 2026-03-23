@@ -10,3 +10,6 @@ Content-Type: application/json
 > {%
     client.global.set("auth_token", response.body.access);
  %}
+
+###
+GET http://127.0.0.1:8000/api/jwks/

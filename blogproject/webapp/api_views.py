@@ -11,6 +11,10 @@ from silk.profiling.profiler import silk_profile
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
+from rest_framework_simplejwt.settings import api_settings
+from jose import jwk
+from jose.constants import ALGORITHMS
+
 from django.contrib.auth import get_user_model
 
 from .events import NotificationProducer
@@ -68,3 +72,16 @@ class NotificationView(APIView):
         notification.send_event("UnsubscribeNotifications", request.user, pk)
         return Response(status=status.HTTP_200_OK)
 
+class JWKSView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        public_key = api_settings.VERIFYING_KEY
+
+        key = jwk.construct(public_key, algorithm=ALGORITHMS.RS256)
+        key_dict = key.to_dict()
+
+        key_dict['kid'] = '1'
+        key_dict['use'] = 'sig'
+
+        return Response({"keys": [key_dict]})
