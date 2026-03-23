@@ -1,0 +1,41 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${AMQP_USER}
+      RABBITMQ_DEFAULT_PASS: ${AMQP_PASS}
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+
+  mongo_eventlog:
+    image: mongo:6
+    container_name: mongo_eventlog
+    port:
+      - '27071:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_LOG_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_LOG_PASS}
+
+  mongo_recommendation:
+    image: mongo:6
+    container_name: mongo_recommendation
+    ports:
+      - '27018:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_RECOMM_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_RECOMM_PASS}
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - '6379:6379'
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - '80:80'
