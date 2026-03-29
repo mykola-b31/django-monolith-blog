@@ -42,6 +42,8 @@ async def moderate_blog_post(message: aiormq.abc.DeliveredMessage):
         blog_post_id = body['body']['post']['id']
         correlation_id = body['correlationId']
         author_id = body['body']['post']['author']['id']
+        author_username = body['body']['post']['author']['username']
+        author_email = body['body']['post']['author']['email']
 
         response = requests.get(os.environ['BLOG_API_URL'] + blog_post_uri)
         if response.status_code != 200:
@@ -77,13 +79,15 @@ async def moderate_blog_post(message: aiormq.abc.DeliveredMessage):
                     body=json.dumps({
                         'correlationId': correlation_id,
                         'body': {
-                            'event': 'BLOG_POST_MODERATED',
+                            'event': 'RecommendationReady',
                             'post': {
                                 'id': blog_post_id,
+                                'uri': blog_post_uri,
                                 'author': {
-                                    'id': author_id
-                                },
-                                'uri': blog_post_uri
+                                    'id': author_id,
+                                    'username': author_username,
+                                    'email': author_email
+                                }
                             },
                             'moderation': {
                                 'sentiment': {
