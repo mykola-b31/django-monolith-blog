@@ -3,8 +3,8 @@ POST http://127.0.0.1:80/api/token/
 Content-Type: application/json
 
 {
-  "username": "user",
-  "password": "user"
+  "username": "admin",
+  "password": "admin"
 }
 
 > {%
@@ -12,8 +12,8 @@ Content-Type: application/json
  %}
 
 ### Запит до рекомендацій БЕЗ токена
-GET http://127.0.0.1:80/
+GET http://127.0.0.1:80/api/recommendations/
 
 ### Запит до рекомендацій З валідним токеном
-GET http://127.0.0.1:80/
+GET http://127.0.0.1:80/api/recommendations/
 Authorization: Bearer {{auth_token}}
