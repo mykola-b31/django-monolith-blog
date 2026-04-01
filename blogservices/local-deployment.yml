@@ -13,7 +13,7 @@ services:
     image: mongo:6
     container_name: mongo_eventlog
     ports:
-      - '27071:27017'
+      - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_LOG_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_LOG_PASS}
@@ -39,3 +39,5 @@ services:
       - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
     ports:
       - '80:80'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
