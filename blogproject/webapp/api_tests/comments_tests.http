@@ -1,9 +1,9 @@
 ### Отримання всіх коментарів
-GET http://127.0.0.1:8000/api/comments/
+GET http://127.0.0.1:80/api/comments/
 Authorization: Bearer {{auth_token}}
 
 ### Створення коментаря
-POST http://127.0.0.1:8000/api/comments/
+POST http://127.0.0.1:80/api/comments/
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### Редагування коментаря
-PATCH http://127.0.0.1:8000/api/comments/1/
+PATCH http://127.0.0.1:80/api/comments/1/
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
@@ -22,5 +22,5 @@ Content-Type: application/json
 }
 
 ### Видалення коментаря
-DELETE http://127.0.0.1:8000/api/comments/1/
+DELETE http://127.0.0.1:80/api/comments/1/
 Authorization: Bearer {{auth_token}}

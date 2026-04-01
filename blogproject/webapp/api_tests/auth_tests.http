@@ -1,22 +1,19 @@
 ### Авторизація та отримання токена
-POST http://127.0.0.1:8000/api/token/
+POST http://127.0.0.1:80/api/token/
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "password": "admin"
+  "username": "user",
+  "password": "user"
 }
 
 > {%
     client.global.set("auth_token", response.body.access);
  %}
 
-###
-GET http://127.0.0.1:8000/api/jwks/
-
-### Запит до рекомендацій БЕЗ токена (має бути помилка 403)
-GET http://127.0.0.1:8001/
+### Запит до рекомендацій БЕЗ токена
+GET http://127.0.0.1:80/
 
 ### Запит до рекомендацій З валідним токеном
-GET http://127.0.0.1:8001/
+GET http://127.0.0.1:80/
 Authorization: Bearer {{auth_token}}
