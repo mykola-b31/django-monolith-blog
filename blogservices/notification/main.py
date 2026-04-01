@@ -83,7 +83,7 @@ def process_notification(ch, method, properties, body):
                 server.starttls()
                 server.login(mailtrap_user, mailtrap_pass)
 
-                for receiver_doc in subs:
+                for receiver_doc in subs_list:
                     receiver_email = receiver_doc['email']
                     logger.info(f"    -> Sending email to subscriber: {receiver_email}")
 
