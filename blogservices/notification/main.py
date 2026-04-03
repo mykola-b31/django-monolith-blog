@@ -1,12 +1,13 @@
 import json
 import logging
 import os
+import time
+
 import pymongo
 import pika
 from dotenv import load_dotenv
 from pika.compat import url_unquote
 import smtplib
-
 
 load_dotenv()
 
@@ -103,15 +104,26 @@ Hi! There is a new post by {author_name} at {blog_post_uri} that is worth readin
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
 
 if __name__ == "__main__":
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(
-            host=os.environ["AMQP_HOST"],
-            credentials=pika.credentials.PlainCredentials(
-                url_unquote(os.environ["AMQP_USER"]),
-                url_unquote(os.environ["AMQP_PASS"]),
-            ),
-        )
-    )
+    connection = None
+    for i in range(10):
+        try:
+            connection = pika.BlockingConnection(
+                pika.ConnectionParameters(
+                    host=os.environ["AMQP_HOST"],
+                    credentials=pika.credentials.PlainCredentials(
+                        url_unquote(os.environ["AMQP_USER"]),
+                        url_unquote(os.environ["AMQP_PASS"]),
+                    ),
+                )
+            )
+            logger.info("Connected to RabbitMQ")
+            break
+        except pika.exceptions.AMQPConnectionError:
+            logger.info(f"Failed to connect to RabbitMQ, attempt {i + 1}/10")
+            time.sleep(3)
+    else:
+        raise Exception("Failed to connect to RabbitMQ after 10 attempts")
+
     channel = connection.channel()
     channel.basic_consume(queue=QUEUE, on_message_callback=process_notification)
 
