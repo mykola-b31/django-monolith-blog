@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: blog_postgres
+    env_file:
+      - ${BLOGPROJECT_PATH}/.env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: blog_redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: blog_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${AMQP_USER}
+      RABBITMQ_DEFAULT_PASS: ${AMQP_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  mongo:
+    image: mongo:6
+    container_name: blog_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  blogmain:
+    container_name: blogmain
+    build: ${BLOGPROJECT_PATH}
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+      - mongo
+    volumes:
+      - ${BLOGPROJECT_PATH}:/app
+      - ./media:/app/media
+    env_file:
+      - ${BLOGPROJECT_PATH}/.env
+      - ${BLOGPROJECT_PATH}/.env.docker
+    ports:
+      - "8000:8000"
+
+  recommendation:
+    container_name: blog_recommendation
+    build: ${BLOGSERVICES_PATH}/recommendation
+    depends_on:
+      - rabbitmq
+      - mongo
+      - blogmain
+    volumes:
+      - ${BLOGSERVICES_PATH}/recommendation:/app
+    env_file:
+      - ${BLOGSERVICES_PATH}/recommendation/.env
+    ports:
+      - "8001:8001"
+
+  notification:
+    container_name: blog_notification
+    build: ${BLOGSERVICES_PATH}/notification
+    depends_on:
+      - rabbitmq
+      - mongo
+    volumes:
+      - ${BLOGSERVICES_PATH}/notification:/app
+    env_file:
+      - ${BLOGSERVICES_PATH}/.env
+
+  events:
+    container_name: blog_events
+    build: ${BLOGSERVICES_PATH}/events
+    depends_on:
+      - rabbitmq
+      - mongo
+    volumes:
+      - ${BLOGSERVICES_PATH}/events:/app
+    env_file:
+      - ${BLOGSERVICES_PATH}/.env
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  mongo_data:
+
+networks:
+  default:
+    name: blog_network
