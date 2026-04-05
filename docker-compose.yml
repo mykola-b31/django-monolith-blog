@@ -43,6 +43,20 @@ services:
       - mongo_data:/data/db
     ports:
       - "27017:27017"
+      -
+
+  rabbitmq-init:
+    image: python:3.12-slim
+    container_name: blog_rabbitmq_init
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${BLOGSERVICES_PATH}:/app
+    working_dir: /app
+    env_file:
+      - ${BLOGSERVICES_PATH}/.env
+    command: >
+      bash -c "pip install pika python-dotenv && sleep 10 && python init_rabbitmq.py"
 
   blogmain:
     container_name: blogmain

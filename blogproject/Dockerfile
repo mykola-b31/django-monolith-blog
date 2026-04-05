@@ -9,5 +9,5 @@ COPY requirements.txt .
 RUN apt update && apt install -y netcat-traditional
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY blogproject .
+COPY . .
 CMD ["bash", "start.sh"]
