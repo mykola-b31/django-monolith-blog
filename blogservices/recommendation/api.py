@@ -4,7 +4,6 @@ import logging
 from fastapi import FastAPI, Depends
 from contextlib import asynccontextmanager
 
-from events.eventlog import connection
 from moderation import moderate_blog_post
 from db import get_recommendations
 import aiormq

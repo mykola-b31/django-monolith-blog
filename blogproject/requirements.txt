@@ -1,6 +1,6 @@
 Django
 python-decouple
-psycopg2
+psycopg2-binary
 Pillow
 djangorestframework
 drf-spectacular

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
@@ -36,6 +34,7 @@ services:
   mongo:
     image: mongo:6
     container_name: blog_mongo
+    command: mongod --wiredTigerCacheSizeGB 0.25
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
@@ -43,7 +42,6 @@ services:
       - mongo_data:/data/db
     ports:
       - "27017:27017"
-      -
 
   rabbitmq-init:
     image: python:3.12-slim
@@ -57,6 +55,17 @@ services:
       - ${BLOGSERVICES_PATH}/.env
     command: >
       bash -c "pip install pika python-dotenv && sleep 10 && python init_rabbitmq.py"
+
+  nginx:
+    image: nginx:alpine
+    container_name: blog_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ${BLOGSERVICES_PATH}/nginx.local.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - blogmain
+      - recommendation
 
   blogmain:
     container_name: blogmain
@@ -98,7 +107,7 @@ services:
     volumes:
       - ${BLOGSERVICES_PATH}/notification:/app
     env_file:
-      - ${BLOGSERVICES_PATH}/.env
+      - ${BLOGSERVICES_PATH}/notification/.env
 
   events:
     container_name: blog_events
@@ -109,7 +118,7 @@ services:
     volumes:
       - ${BLOGSERVICES_PATH}/events:/app
     env_file:
-      - ${BLOGSERVICES_PATH}/.env
+      - ${BLOGSERVICES_PATH}/events/.env
 
 volumes:
   postgres_data:
