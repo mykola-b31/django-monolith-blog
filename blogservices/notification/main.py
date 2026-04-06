@@ -105,7 +105,7 @@ Hi! There is a new post by {author_name} at {blog_post_uri} that is worth readin
 
 if __name__ == "__main__":
     connection = None
-    for i in range(10):
+    for i in range(20):
         try:
             connection = pika.BlockingConnection(
                 pika.ConnectionParameters(
@@ -120,7 +120,7 @@ if __name__ == "__main__":
             break
         except pika.exceptions.AMQPConnectionError:
             logger.info(f"Failed to connect to RabbitMQ, attempt {i + 1}/10")
-            time.sleep(3)
+            time.sleep(5)
     else:
         raise Exception("Failed to connect to RabbitMQ after 10 attempts")
 
