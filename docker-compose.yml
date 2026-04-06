@@ -88,9 +88,12 @@ services:
     container_name: blog_recommendation
     build: ${BLOGSERVICES_PATH}/recommendation
     depends_on:
-      - rabbitmq
-      - mongo
-      - blogmain
+      rabbitmq-init:
+        condition: service_completed_successfully
+      mongo:
+        condition: service_started
+      blogmain:
+        condition: service_started
     volumes:
       - ${BLOGSERVICES_PATH}/recommendation:/app
     env_file:
@@ -102,8 +105,10 @@ services:
     container_name: blog_notification
     build: ${BLOGSERVICES_PATH}/notification
     depends_on:
-      - rabbitmq
-      - mongo
+      rabbitmq-init:
+        condition: service_completed_successfully
+      mongo:
+        condition: service_started
     volumes:
       - ${BLOGSERVICES_PATH}/notification:/app
     env_file:
@@ -113,8 +118,10 @@ services:
     container_name: blog_events
     build: ${BLOGSERVICES_PATH}/events
     depends_on:
-      - rabbitmq
-      - mongo
+      rabbitmq-init:
+        condition: service_completed_successfully
+      mongo:
+        condition: service_started
     volumes:
       - ${BLOGSERVICES_PATH}/events:/app
     env_file:
