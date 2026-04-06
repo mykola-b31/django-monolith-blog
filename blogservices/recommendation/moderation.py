@@ -47,7 +47,7 @@ async def moderate_blog_post(message: aiormq.abc.DeliveredMessage):
 
         response = requests.get(os.environ['BLOG_API_URL'] + blog_post_uri)
         if response.status_code != 200:
-            logger.error("Failed to get post information from API", response.text, "status code:", response.status_code)
+            logger.error(f"Failed to get post information from API. Response: {response.text}, status code: {response.status_code}")
 
             await message.channel.basic_nack(
                 message.delivery.delivery_tag,
